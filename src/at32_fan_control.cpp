@@ -5,7 +5,8 @@
 // Sensor wire is plugged into port 2 on the Arduino.
 // For a list of available pins on your board,
 // please refer to: https://www.arduino.cc/en/Reference/AttachInterrupt
-#define SENSOR_PIN 2
+#define SENSOR_PIN_1 2
+#define SENSOR_PIN_2 3
 
 // Choose a threshold in milliseconds between readings.
 // A smaller value will give more updated results,
@@ -13,10 +14,12 @@
 #define SENSOR_THRESHOLD 1000
 
 // PWM pin (4th on 4 pin fans)
-#define PWM_PIN 9
+#define PWM_PIN_1 5
+#define PWM_PIN_2 6
 
 // Initialize library
-FanController fan(SENSOR_PIN, SENSOR_THRESHOLD, PWM_PIN);
+FanController fan1 = FanController(SENSOR_PIN_1, SENSOR_THRESHOLD, PWM_PIN_1);
+FanController fan2 = FanController(SENSOR_PIN_2, SENSOR_THRESHOLD, PWM_PIN_2);
 
 /*
    The setup function. We only start the library here
@@ -28,17 +31,22 @@ void setup(void)
   Serial.println("Fan Controller Library Demo");
 
   // Start up the library
-  fan.begin();
+  fan1.begin();
+  fan2.begin();
 }
 
-/*
+/*10
    Main function, get and show the temperature
 */
 void loop(void)
 {
   // Call fan.getSpeed() to get fan RPM.
-  Serial.print("Current speed: ");
-  unsigned int rpms = fan.getSpeed(); // Send the command to get RPM
+  Serial.print("Current speed - 1: ");
+  unsigned int rpms = fan1.getSpeed(); // Send the command to get RPM
+  Serial.print(rpms);
+  Serial.println("RPM");
+  Serial.print("Current speed - 2: ");
+  rpms = fan2.getSpeed(); // Send the command to get RPM
   Serial.print(rpms);
   Serial.println("RPM");
 
@@ -55,11 +63,15 @@ void loop(void)
     Serial.println(target, DEC);
 
     // Set fan duty cycle
-    fan.setDutyCycle(target);
+    fan1.setDutyCycle(target);
+    fan2.setDutyCycle(target);
 
     // Get duty cycle
-    byte dutyCycle = fan.getDutyCycle();
-    Serial.print("Duty cycle: ");
+    byte dutyCycle = fan1.getDutyCycle();
+    Serial.print("Duty cycle - 1: ");
+    Serial.println(dutyCycle, DEC);
+    dutyCycle = fan2.getDutyCycle();
+    Serial.print("Duty cycle - 2: ");
     Serial.println(dutyCycle, DEC);
   }
 
