@@ -24,58 +24,56 @@ FanController fan2 = FanController(SENSOR_PIN_2, SENSOR_THRESHOLD, PWM_PIN_2);
 /*
    The setup function. We only start the library here
 */
-void setup(void)
-{
-  // start serial port
-  Serial.begin(9600);
-  Serial.println("Fan Controller Library Demo");
+void setup(void) {
+    // start serial port
+    Serial.begin(9600);
+    Serial.println("Fan Controller Library Demo");
 
-  // Start up the library
-  fan1.begin();
-  fan2.begin();
+    // Start up the library
+    fan1.begin();
+    fan2.begin();
 }
 
 /*10
    Main function, get and show the temperature
 */
-void loop(void)
-{
-  // Call fan.getSpeed() to get fan RPM.
-  Serial.print("Current speed - 1: ");
-  unsigned int rpms = fan1.getSpeed(); // Send the command to get RPM
-  Serial.print(rpms);
-  Serial.println("RPM");
-  Serial.print("Current speed - 2: ");
-  rpms = fan2.getSpeed(); // Send the command to get RPM
-  Serial.print(rpms);
-  Serial.println("RPM");
+void loop(void) {
+    // Call fan.getSpeed() to get fan RPM.
+    Serial.print("Current speed - 1: ");
+    unsigned int rpms = fan1.getSpeed(); // Send the command to get RPM
+    Serial.print(rpms);
+    Serial.println("RPM");
+    Serial.print("Current speed - 2: ");
+    rpms = fan2.getSpeed(); // Send the command to get RPM
+    Serial.print(rpms);
+    Serial.println("RPM");
 
-  // Get new speed from Serial (0-100%)
-  if (Serial.available() > 0) {
-    // Parse speed
-    int input = Serial.parseInt();
+    // Get new speed from Serial (0-100%)
+    if (Serial.available() > 0) {
+        // Parse speed
+        int input = Serial.parseInt();
 
-    // Constrain a 0-100 range
-    byte target = max(min(input, 100), 0);
+        // Constrain a 0-100 range
+        byte target = max(min(input, 100), 0);
 
-    // Print obtained value
-    Serial.print("Setting duty cycle: ");
-    Serial.println(target, DEC);
+        // Print obtained value
+        Serial.print("Setting duty cycle: ");
+        Serial.println(target, DEC);
 
-    // Set fan duty cycle
-    fan1.setDutyCycle(target);
-    fan2.setDutyCycle(target);
+        // Set fan duty cycle
+        fan1.setDutyCycle(target);
+        fan2.setDutyCycle(target);
 
-    // Get duty cycle
-    byte dutyCycle = fan1.getDutyCycle();
-    Serial.print("Duty cycle - 1: ");
-    Serial.println(dutyCycle, DEC);
-    dutyCycle = fan2.getDutyCycle();
-    Serial.print("Duty cycle - 2: ");
-    Serial.println(dutyCycle, DEC);
-  }
+        // Get duty cycle
+        byte dutyCycle = fan1.getDutyCycle();
+        Serial.print("Duty cycle - 1: ");
+        Serial.println(dutyCycle, DEC);
+        dutyCycle = fan2.getDutyCycle();
+        Serial.print("Duty cycle - 2: ");
+        Serial.println(dutyCycle, DEC);
+    }
 
-  // Not really needed, just avoiding spamming the monitor,
-  // readings will be performed no faster than once every THRESHOLD ms anyway
-  delay(250);
+    // Not really needed, just avoiding spamming the monitor,
+    // readings will be performed no faster than once every THRESHOLD ms anyway
+    delay(250);
 }
